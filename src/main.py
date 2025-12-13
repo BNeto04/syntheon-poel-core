@@ -8,6 +8,8 @@ def main():
 
     while True:
         user_input = input("Você: ").strip()
+        if not user_input:
+            continue
         if user_input.lower() in {"sair", "exit", "quit"}:
             save_state(state)
             print("Poel desativado. Estado salvo.")
