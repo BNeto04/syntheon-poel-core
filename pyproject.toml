@@ -3,7 +3,10 @@ name = "syntheon-poel-core"
 version = "0.1.0"
 dependencies = [
     "openai>=1.30.0",
-    "python-dotenv"
+    "python-dotenv",
+    "pydantic",
+    "structlog",
+    "click"
 ]
 
 [project.scripts]
