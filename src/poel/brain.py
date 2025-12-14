@@ -1,11 +1,14 @@
-from openai import OpenAI
+from openai import AsyncOpenAI
 from .config import MODEL, MAX_OUTPUT_TOKENS
 from .identity import POEL_INSTRUCTIONS
 
-client = OpenAI()
+client = AsyncOpenAI()
 
-def think(input_items: list) -> str:
-    response = client.responses.create(
+async def think(input_items: list) -> str:
+    """
+    Pensa usando Responses API (async).
+    """
+    response = await client.responses.create(
         model=MODEL,
         instructions=POEL_INSTRUCTIONS,
         input=input_items,
