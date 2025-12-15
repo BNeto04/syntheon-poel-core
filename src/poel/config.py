@@ -1,18 +1,28 @@
-import os
 from datetime import timedelta
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import HttpUrl
 
-load_dotenv()
 
-# OpenAI
-MODEL = os.getenv("POEL_MODEL", "gpt-4o")
-MAX_OUTPUT_TOKENS = int(os.getenv("POEL_MAX_OUTPUT_TOKENS", "800"))
-WINDOW_TURNS = int(os.getenv("POEL_WINDOW_TURNS", "12"))
+class Settings(BaseSettings):
+    # OpenAI
+    OPENAI_API_KEY: str
+    POEL_MODEL: str = "gpt-4o"
+    POEL_MAX_OUTPUT_TOKENS: int = 800
+    POEL_WINDOW_TURNS: int = 12
 
-# Sechel Integration
-SECHEL_API_URL = os.getenv("SECHEL_API_URL", "http://localhost:8001")
-SECHEL_ENABLED = os.getenv("SECHEL_ENABLED", "false").lower() == "true"
+    # Sechel Integration
+    SECHEL_API_URL: HttpUrl = "http://localhost:8001"
+    SECHEL_ENABLED: bool = False
 
-# Session Management
-SESSION_TTL = timedelta(hours=int(os.getenv("SESSION_TTL_HOURS", "3")))
-SESSION_DIR = os.getenv("SESSION_DIR", ".sessions")
+    # Session Management
+    SESSION_TTL_HOURS: int = 3
+    SESSION_DIR: str = ".sessions"
+
+    @property
+    def SESSION_TTL(self) -> timedelta:
+        return timedelta(hours=self.SESSION_TTL_HOURS)
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+
+settings = Settings()
