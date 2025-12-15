@@ -34,6 +34,7 @@ def load_state(session_id: str = None) -> PoelState:
 
 def save_state(state: PoelState):
     """Salva estado."""
+    state.truncate_history()
     state_file = Path(settings.SESSION_DIR) / f"{state.session_id}.json"
     state_file.write_text(state.to_json(), encoding="utf-8")
 

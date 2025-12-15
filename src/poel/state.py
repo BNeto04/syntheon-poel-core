@@ -59,3 +59,11 @@ class PoelState:
     @property
     def turn_id(self) -> int:
         return self._data.turn_id
+
+    def truncate_history(self, max_turns: int = None):
+        """Mantém apenas últimos N turnos."""
+        if max_turns is None:
+            max_turns = settings.POEL_WINDOW_TURNS * 2
+
+        if len(self._data.history) > max_turns:
+            self._data.history = self._data.history[-max_turns:]

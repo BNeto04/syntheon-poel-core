@@ -4,6 +4,15 @@ from .config import settings
 from .sechel_client import SechelClient
 
 
+def _truncate_context(text: str, max_chars: int = 2000) -> str:
+    """Trunca contexto mantendo começo e fim."""
+    if len(text) <= max_chars:
+        return text
+
+    half = max_chars // 2
+    return f"{text[:half]}\n\n[...]\n\n{text[-half:]}"
+
+
 async def build_input(
     state: PoelState, user_text: str, sechel_client: Optional[SechelClient] = None
 ) -> List[Dict[str, str]]:
@@ -21,15 +30,17 @@ async def build_input(
         )
 
         if context_pack.canonical_state:
+            canonical = _truncate_context(context_pack.canonical_state)
+            relevant = _truncate_context(context_pack.relevant_context)
             input_items.append(
                 {
                     "role": "system",
                     "content": f"""<canonical_state>
-{context_pack.canonical_state}
+{canonical}
 </canonical_state>
 
 <relevant_context>
-{context_pack.relevant_context}
+{relevant}
 </relevant_context>""",
                 }
             )
